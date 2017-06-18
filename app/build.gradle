@@ -20,9 +20,9 @@ android {
         }
     }
     // 注释冲突
-//    packagingOptions {
-//        exclude 'META-INF/services/javax.annotation.processing.Processor'
-//    }
+    packagingOptions {
+        exclude 'META-INF/services/javax.annotation.processing.Processor'
+    }
 }
 
 dependencies {
@@ -35,10 +35,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     //引入Dagger2
     compile 'com.google.dagger:dagger:2.11'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.11'
+    provided 'com.google.dagger:dagger-compiler:2.11'
     //添加ButterKnife
     compile 'com.jakewharton:butterknife:8.6.0'
-    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    provided 'com.jakewharton:butterknife-compiler:8.6.0'
     //网络访问工具
     compile 'com.google.code.gson:gson:2.8.1'
     compile 'com.squareup.retrofit2:retrofit:2.3.0'

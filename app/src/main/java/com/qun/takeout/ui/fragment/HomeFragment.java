@@ -1,13 +1,22 @@
 package com.qun.takeout.ui.fragment;
 
+import android.animation.ArgbEvaluator;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qun.takeout.R;
+import com.qun.takeout.ui.adapter.HomeRecyclerViewAdapter;
+
+import butterknife.BindView;
+import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 /**
  * 工作内容：
@@ -24,14 +33,61 @@ import com.qun.takeout.R;
 
 public class HomeFragment extends BaseFragment {
 
+    @BindView(R.id.rv_home)
+    RecyclerView mRvHome;
+    @BindView(R.id.home_tv_address)
+    TextView mHomeTvAddress;
+    @BindView(R.id.ll_title_search)
+    LinearLayout mLlTitleSearch;
+    @BindView(R.id.ll_title_container)
+    LinearLayout mLlTitleContainer;
+    Unbinder unbinder;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_home, null);
+        View view = inflater.inflate(R.layout.fragment_home, null);
+        unbinder = ButterKnife.bind(this, view);
+        return view;
     }
 
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        mRvHome.setAdapter(new HomeRecyclerViewAdapter());
+        mRvHome.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
+
+        mRvHome.addOnScrollListener(listener);
+    }
+
+    private int sumY = 0;
+    private float duration = 150.0f;//在0到150之间去改变头部的透明度
+    private ArgbEvaluator evaluator = new ArgbEvaluator();
+    private RecyclerView.OnScrollListener listener = new RecyclerView.OnScrollListener() {
+
+        @Override
+        public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
+            super.onScrolled(recyclerView, dx, dy);
+
+//            System.out.println("recyclerView = [" + recyclerView + "], dx = [" + dx + "], dy = [" + dy + "]");
+            sumY += dy;
+            //滚动的总距离相对0到150之间有一个百分比，头部的透明度也是从初始化变动到不透明，通过距离的百分比，得到透明度对应的值
+            //如果小于0那么透明度为初始值，如果大于150为不透明状态
+            int bgColor = 0X553190E8;
+            if (sumY < 0) {
+                bgColor = 0X553190E8;
+            } else if (sumY > 150) {
+                bgColor = 0XFF3190E8;
+            } else {
+                bgColor = (int) evaluator.evaluate(sumY / duration, 0X553190E8, 0XFF3190E8);
+            }
+            mLlTitleContainer.setBackgroundColor(bgColor);
+        }
+    };
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        unbinder.unbind();
     }
 }
