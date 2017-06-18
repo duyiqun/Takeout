@@ -1,12 +1,19 @@
 package com.qun.takeout.ui.activity;
 
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 
 import com.qun.takeout.R;
+import com.qun.takeout.ui.fragment.HomeFragment;
+import com.qun.takeout.ui.fragment.MoreFragment;
+import com.qun.takeout.ui.fragment.OrderFragment;
+import com.qun.takeout.ui.fragment.UserFragment;
+
+import java.util.ArrayList;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -18,6 +25,7 @@ public class MainActivity extends BaseActivity {
     //底部导航容器
     @BindView(R.id.main_bottom_switcher_container)
     LinearLayout mMainBottomSwitcherContainer;
+    ArrayList<Fragment> mFragments = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,9 +33,22 @@ public class MainActivity extends BaseActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
+        init();
         setListener();
     }
 
+    private void init() {
+        mFragments.add(new HomeFragment());
+        mFragments.add(new OrderFragment());
+        mFragments.add(new UserFragment());
+        mFragments.add(new MoreFragment());
+
+        onClickListener.onClick(mMainBottomSwitcherContainer.getChildAt(0));
+    }
+
+    /**
+     * 需求：完成一个通用底部导航的处理
+     */
     private void setListener() {
         //所有孩子，不包括孙子
         int childCount = mMainBottomSwitcherContainer.getChildCount();
@@ -43,6 +64,7 @@ public class MainActivity extends BaseActivity {
         public void onClick(View v) {
             int index = mMainBottomSwitcherContainer.indexOfChild(v);
             changeUI(index);
+            changeFragment(index);
         }
     };
 
@@ -86,5 +108,11 @@ public class MainActivity extends BaseActivity {
                 setEnable(((ViewGroup) item).getChildAt(i), b);
             }
         }
+    }
+
+    private void changeFragment(int index) {
+        //通过这个底部容器item的index能够获取到对应的Fragment，需要将所有的Fragment对号放好(使用集合)
+        Fragment fragment = mFragments.get(index);
+        getSupportFragmentManager().beginTransaction().replace(R.id.main_fragment_container, fragment).commit();
     }
 }
