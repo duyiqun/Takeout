@@ -14,6 +14,9 @@ import android.widget.TextView;
 import com.qun.takeout.R;
 import com.qun.takeout.ui.adapter.HomeRecyclerViewAdapter;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.Unbinder;
@@ -54,11 +57,26 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        mRvHome.setAdapter(new HomeRecyclerViewAdapter());
+        testData();
+//        mRvHome.setAdapter(new HomeRecyclerViewAdapter());
         mRvHome.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
-
         mRvHome.addOnScrollListener(listener);
     }
+
+    private void testData() {
+        List<String> nearBySeller = new ArrayList<>();
+        List<String> otherSeller = new ArrayList<>();
+        for (int i = 1; i < 20; i++) {
+            nearBySeller.add("附近商家" + i);
+        }
+
+        for (int i = 1; i < 100; i++) {
+            otherSeller.add("普通商家" + i);
+        }
+
+        mRvHome.setAdapter(new HomeRecyclerViewAdapter(nearBySeller, otherSeller));
+    }
+
 
     private int sumY = 0;
     private float duration = 150.0f;//在0到150之间去改变头部的透明度
