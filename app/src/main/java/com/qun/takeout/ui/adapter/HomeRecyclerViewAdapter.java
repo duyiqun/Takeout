@@ -92,15 +92,21 @@ public class HomeRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.V
 //                    int index = position - mNearBySellers.size() - divisionSum;
 //                    ((SellerHolder) holder).tv.setText(mOtherSellers.get(index));
 
+                    //方法一：
                     //判断：如果positionToIndex中能够通过position获取到index信息，直接到其他商家集合获取数据
                     //获取不到，计算index，并建立position与index的对应关系
-                    int index = 0;
-                    if (positionToIndex.containsKey(position)) {
-                        index = positionToIndex.get(position);
-                    } else {
-                        index = position - mNearBySellers.size() - 1 - divisionSum;
-                        positionToIndex.put(position, index);
-                    }
+//                    int index = 0;
+//                    if (positionToIndex.containsKey(position)) {
+//                        index = positionToIndex.get(position);
+//                    } else {
+//                        index = position - mNearBySellers.size() - 1 - divisionSum;
+//                        positionToIndex.put(position, index);
+//                    }
+//                    ((SellerHolder) holder).tv.setText(mOtherSellers.get(index));
+
+                    //方法二：
+                    //直接计算对应position的index
+                    int index = position - mNearBySellers.size() - 1 - (position - mNearBySellers.size() - 1) / (mOtherSellerPerGroupNum + 1) - 1;
                     ((SellerHolder) holder).tv.setText(mOtherSellers.get(index));
                 }
                 break;

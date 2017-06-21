@@ -12,10 +12,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.qun.takeout.R;
+import com.qun.takeout.presenter.fragment.HomeFragmentPresenter;
 import com.qun.takeout.ui.adapter.HomeRecyclerViewAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -46,6 +49,9 @@ public class HomeFragment extends BaseFragment {
     LinearLayout mLlTitleContainer;
     Unbinder unbinder;
 
+    @Inject
+    HomeFragmentPresenter homeFragmentPresenter;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -57,10 +63,12 @@ public class HomeFragment extends BaseFragment {
     @Override
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        testData();
-//        mRvHome.setAdapter(new HomeRecyclerViewAdapter());
+//        testData();
+        mRvHome.setAdapter(new HomeRecyclerViewAdapter());
         mRvHome.setLayoutManager(new LinearLayoutManager(this.getContext(), LinearLayoutManager.VERTICAL, false));
         mRvHome.addOnScrollListener(listener);
+
+        homeFragmentPresenter.getData();
     }
 
     private void testData() {
